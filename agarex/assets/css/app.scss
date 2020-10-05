@@ -89,3 +89,27 @@
   display: block;
   margin: -1rem 0 2rem;
 }
+
+body {
+    margin: 0;
+    padding: 0;
+}
+
+main.wrapper {
+    margin: 0 auto;
+    text-align: center;
+}
+
+svg.app {
+    position: inline-block;
+    max-height: 95vh;
+    max-width: 100vw;
+}
+
+svg {
+    circle.player {
+        fill: purple;
+        stroke: black;
+        stroke-width: 0.5;
+    }
+}

@@ -12,9 +12,10 @@ defmodule Agarex.Application do
       # Start the PubSub system
       {Phoenix.PubSub, name: Agarex.PubSub},
       # Start the Endpoint (http/https)
-      AgarexWeb.Endpoint
+      AgarexWeb.Endpoint,
       # Start a worker by calling: Agarex.Worker.start_link(arg)
       # {Agarex.Worker, arg}
+      Agarex.Game
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html

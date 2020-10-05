@@ -1,39 +1,59 @@
 defmodule AgarexWeb.PageLive do
   use AgarexWeb, :live_view
 
-  @impl true
   def mount(_params, _session, socket) do
-    {:ok, assign(socket, query: "", results: %{})}
+    Phoenix.PubSub.subscribe(Agarex.PubSub, "game/tick")
+    socket =
+      socket
+      |> assign(:game_state, nil)
+    {:ok, socket}
   end
 
-  @impl true
-  def handle_event("suggest", %{"q" => query}, socket) do
-    {:noreply, assign(socket, results: search(query), query: query)}
+  def handle_event(_event, socket) do
+    {:noreply, socket}
   end
 
-  @impl true
-  def handle_event("search", %{"q" => query}, socket) do
-    case search(query) do
-      %{^query => vsn} ->
-        {:noreply, redirect(socket, external: "https://hexdocs.pm/#{query}/#{vsn}")}
-
-      _ ->
-        {:noreply,
-         socket
-         |> put_flash(:error, "No dependencies found matching \"#{query}\"")
-         |> assign(results: %{}, query: query)}
-    end
+  def handle_info({"game/tick", game_state}, socket) do
+    IO.inspect({"Game tick:", game_state}, label: :handle_info);
+    socket =
+      socket
+      |> assign(:game_state, game_state)
+    {:noreply, socket}
   end
 
-  defp search(query) do
-    if not AgarexWeb.Endpoint.config(:code_reloader) do
-      raise "action disabled when not in development"
-    end
+  # @impl true
+  # def mount(_params, _session, socket) do
+  #   {:ok, assign(socket, query: "", results: %{})}
+  # end
 
-    for {app, desc, vsn} <- Application.started_applications(),
-        app = to_string(app),
-        String.starts_with?(app, query) and not List.starts_with?(desc, ~c"ERTS"),
-        into: %{},
-        do: {app, vsn}
-  end
+  # @impl true
+  # def handle_event("suggest", %{"q" => query}, socket) do
+  #   {:noreply, assign(socket, results: search(query), query: query)}
+  # end
+
+  # @impl true
+  # def handle_event("search", %{"q" => query}, socket) do
+  #   case search(query) do
+  #     %{^query => vsn} ->
+  #       {:noreply, redirect(socket, external: "https://hexdocs.pm/#{query}/#{vsn}")}
+
+  #     _ ->
+  #       {:noreply,
+  #        socket
+  #        |> put_flash(:error, "No dependencies found matching \"#{query}\"")
+  #        |> assign(results: %{}, query: query)}
+  #   end
+  # end
+
+  # defp search(query) do
+  #   if not AgarexWeb.Endpoint.config(:code_reloader) do
+  #     raise "action disabled when not in development"
+  #   end
+
+  #   for {app, desc, vsn} <- Application.started_applications(),
+  #       app = to_string(app),
+  #       String.starts_with?(app, query) and not List.starts_with?(desc, ~c"ERTS"),
+  #       into: %{},
+  #       do: {app, vsn}
+  # end
 end
