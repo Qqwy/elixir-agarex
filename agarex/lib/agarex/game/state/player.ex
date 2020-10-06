@@ -1,14 +1,14 @@
 defmodule Agarex.Game.State.Player do
   defstruct [:name, :size, :position, :velocity, :alive?]
 
-  @movement_speed 1/200000000
+  @movement_speed 1/50000000
 
   def new(name) do
     %__MODULE__{
       name: name,
       size: bit_size(name),
       position: {10, 20},
-      velocity: {1, 1},
+      velocity: {0, 0},
       alive?: true,
     }
   end
@@ -50,6 +50,8 @@ defmodule Agarex.Game.State.Player do
   end
 
   def alter_velocity(player, velocity) when tuple_size(velocity) == 2 do
+    IO.inspect({"Old velocity:", player.velocity})
+    IO.inspect({"New velocity:", velocity})
     put_in(player.velocity, velocity)
   end
 end

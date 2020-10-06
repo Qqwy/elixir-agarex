@@ -11,11 +11,10 @@ defmodule Agarex.Local do
   def handle_event(event, params, struct) do
     case event do
       ["controls" | rest] ->
-        struct = Effect.effectful_update_in(struct.controls, &Controls.handle_event(rest, params, &1))
-        {struct, fn -> Controls.broadcast_velocity(struct.controls, struct.player_id) end}
+        {struct, effects} = Effect.effectful_update_in(struct.controls, &Controls.handle_event(rest, params, &1))
+        {struct, effects ++ fn -> Controls.broadcast_velocity(struct.controls, struct.player_id) end}
       ["game" , "tick"] ->
-        struct = put_in(struct.game_state, params)
-        {struct, []}
+        put_in(struct.game_state, params)
     end
   end
 end

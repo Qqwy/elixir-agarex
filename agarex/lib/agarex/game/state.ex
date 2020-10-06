@@ -11,11 +11,11 @@ defmodule Agarex.Game.State do
 
   def add_player(state, name) do
     IO.inspect("Adding player: #{name}")
-    new_state = update_in(state.players, fn players ->
+    state = update_in(state.players, fn players ->
       Arrays.append(players, Player.new(name))
     end)
-    new_player_index = Arrays.size(state.players) - 1
-    {new_state, new_player_index}
+    player_index = Arrays.size(state.players) - 1
+    {state, player_index}
   end
 
   def tick(state, dt) do
@@ -63,5 +63,4 @@ defmodule Agarex.Game.State do
       |> update_in([larger_id], &Player.grow(&1, smaller_size))
     end)
   end
-
 end

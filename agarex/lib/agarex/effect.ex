@@ -11,9 +11,8 @@ defmodule Agarex.Effect do
     end
   end
 
-  @doc false
+  def normalize({state, effects}) when is_list(effects), do: {state, effects}
+  def normalize({state, effect}), do: {state, [effect]}
   def normalize(state), do: {state, []}
-  def normalize(state, effects) when is_list(effects), do: {state, effects}
-  def normalize(state, effect), do: {state, [effect]}
 end
 

@@ -12,6 +12,7 @@ defmodule Agarex.Game.Server do
   @impl true
   def init(_) do
     Process.send_after(self(), :tick, @tick_ms)
+    Phoenix.PubSub.subscribe(Agarex.PubSub, "game/player_velocity")
     {:ok, %{time: System.monotonic_time(), game_state: State.new()}}
   end
 
@@ -29,6 +30,11 @@ defmodule Agarex.Game.Server do
   def handle_info(:tick, state) do
     Process.send_after(self(), :tick, @tick_ms)
     state = tick(state)
+    {:noreply, state}
+  end
+
+  def handle_info({"game/player_velocity", %{player_id: player_id, velocity: velocity}}, state) do
+    state = update_in(state, [Access.key(:game_state), Access.key(:players), player_id], &State.Player.alter_velocity(&1, velocity))
     {:noreply, state}
   end
 
