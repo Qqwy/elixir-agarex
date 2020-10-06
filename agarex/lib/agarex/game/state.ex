@@ -5,8 +5,14 @@ defmodule Agarex.Game.State do
 
   def new() do
     %__MODULE__{
-      players: %{0 => Player.new()}
+      players: Arrays.new([Player.new("p1"), Player.new("player2")])
     }
+  end
+
+  def add_new_player(state, name) do
+    update_in(state.players, fn players ->
+      Arrays.append(players, Player.new(name))
+    end)
   end
 
   def tick(state, dt) do
@@ -16,11 +22,9 @@ defmodule Agarex.Game.State do
   end
 
   defp move_players(state, dt) do
-    updated_players =
-      state.players
-      |> Enum.map(&Player.tick(&1, dt))
-
-    %{state | players: updated_players}
+    update_in(state.players, fn players ->
+      Arrays.map(players, fn _, player -> Player.move(player, dt) end)
+    end)
   end
 
   defp resolve_collisions(state) do
@@ -30,34 +34,31 @@ defmodule Agarex.Game.State do
   defp colliding_players(state) do
     alive_players =
       state.players
-      |> Enum.filter(&(&1.alive?))
+      |> Arrays.to_list
+      |> Enum.with_index
+      |> Enum.filter(fn {player, _index} ->  player.alive? end)
 
-    for {a_id, a} <- alive_players,
-      {b_id, b} <- alive_players,
+    for {a, a_id} <- alive_players,
+      {b, b_id} <- alive_players,
       a.alive?,
       b.alive?,
       a_id != b_id,
-      collide?(a, b) do
-        cond do
-          a.size == b.size -> nil
-          a.size < b.size -> {a_id, b_id}
-          a.size > b.size -> {b_id, a_id}
-        end
+      a.size < b.size,
+      Player.collide?(a, b) do
+        {a_id, b_id}
     end
-    |> Enum.filter(&(&1 == nil))
   end
 
-  defp eat_small_feed_larger({smaller_id, larger_id}, state) do
+  defp eat_smaller_feed_larger({smaller_id, larger_id}, state) do
+    IO.inspect({smaller_id, larger_id})
+    IO.inspect(state.players)
     smaller_size = get_in(state, [Access.key(:players), smaller_id, Access.key(:size)])
 
     update_in(state.players, fn players ->
       players
-      |> update_in(smaller_id, &Player.kill/1)
-      |> update_in(larger_id, &Player.grow(&1, smaller_size))
+      |> update_in([smaller_id], &Player.kill/1)
+      |> update_in([larger_id], &Player.grow(&1, smaller_size))
     end)
   end
 
-  def add_new_player(state, name) do
-    
-  end
 end
