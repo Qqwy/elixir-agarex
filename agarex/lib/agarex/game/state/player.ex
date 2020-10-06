@@ -13,6 +13,7 @@ defmodule Agarex.Game.State.Player do
     }
   end
 
+  def move(player = %__MODULE__{alive?: false}, dt), do: player
   def move(player, dt) do
     update_in(player.position, fn {x, y} ->
       {vx, vy} = player.velocity
@@ -27,10 +28,12 @@ defmodule Agarex.Game.State.Player do
     {bx, by} = b.position
     dx = bx - ax
     dy = by - ay
-    radii = a.size + b.size
+    ra = :math.sqrt(a.size / :math.pi)
+    rb = :math.sqrt(b.size / :math.pi)
+    radii =  ra + rb
 
     # Distance between center points is smaller than the radii
-    dx*dx + dy*dy < radii
+    dx*dx + dy*dy < radii*radii
   end
 
   def grow(player, size) do

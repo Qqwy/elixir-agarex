@@ -6,10 +6,25 @@
      phx-window-keyup="controls/key_up"
      >
     <%= if @local && @local.game_state do %>
+    <% current = Local.current_player(@local) %>
     <%= for player <- @local.game_state.players do %>
         <% {x, y} = player.position %>
         <!-- TODO offset with current player's position -->
-        <circle cx="<%= x %>" cy="<%= y %>" r="2" class="player"/>
+        <%= if player.alive? do %>
+          <circle
+              cx="<%= x %>"
+              cy="<%= y %>"
+              r="<%= :math.sqrt(player.size / :math.pi) %>"
+              class="player <%= relative_size_class(player, current) %>"
+          />
+          <% else %>
+          <circle
+              cx="<%= x %>"
+              cy="<%= y %>"
+              r="<%= :math.sqrt(player.size / :math.pi) %>"
+              class="player dead"
+          />
+          <% end %>
       <% end %>
     <% end %>
   </svg>

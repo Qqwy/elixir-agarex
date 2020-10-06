@@ -111,5 +111,19 @@ svg {
         fill: purple;
         stroke: black;
         stroke-width: 0.5;
+
+        transition: fill 0.5s, stroke 0.5s;
+
+        &.smaller {
+            fill: lime;
+        }
+        &.bigger {
+            fill: red;
+        }
+
+        &.dead {
+            fill: rgba(255, 255, 255, 0);
+            stroke: rgba(255, 255, 255, 0);
+        }
     }
 }

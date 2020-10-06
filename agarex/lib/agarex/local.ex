@@ -17,4 +17,10 @@ defmodule Agarex.Local do
         put_in(struct.game_state, params)
     end
   end
+
+  def current_player(struct) do
+    IO.inspect(struct)
+    get_in(struct, [Access.key(:game_state), Access.key(:players), struct.player_id])
+    |> IO.inspect(label: :current_player)
+  end
 end
