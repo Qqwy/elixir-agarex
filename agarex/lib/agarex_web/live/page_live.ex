@@ -1,59 +1,43 @@
 defmodule AgarexWeb.PageLive do
   use AgarexWeb, :live_view
 
-  def mount(_params, _session, socket) do
+  alias Agarex.Local
+  alias Agarex.EffectsInterpreter
+
+  def mount(%{"player_name" => player_name}, _session, socket) do
+
+    player_index = Agarex.Game.Server.add_player(player_name)
     Phoenix.PubSub.subscribe(Agarex.PubSub, "game/tick")
+
     socket =
       socket
-      |> assign(:game_state, nil)
+      |> assign(:local, Agarex.Local.new(player_index))
+
     {:ok, socket}
   end
 
-  def handle_event(_event, socket) do
-    {:noreply, socket}
+  def handle_event(event, params, socket) do
+    do_handle_event(event, params, socket)
   end
 
-  def handle_info({"game/tick", game_state}, socket) do
-    IO.inspect({"Game tick:", game_state}, label: :handle_info);
+  def handle_info({event, params}, socket) do
+    do_handle_event(event, params, socket)
+  end
+
+  defp do_handle_event(raw_event, params, socket) do
+    event = normalize_event(raw_event)
+    {new_state, effects} =
+      Agarex.Local.handle_event(event, params, socket.assigns.local)
+
     socket =
       socket
-      |> assign(:game_state, game_state)
+      |> assign(:local, new_state)
+      |> EffectInterpreter.run_effects(effects)
+
     {:noreply, socket}
   end
 
-  # @impl true
-  # def mount(_params, _session, socket) do
-  #   {:ok, assign(socket, query: "", results: %{})}
-  # end
-
-  # @impl true
-  # def handle_event("suggest", %{"q" => query}, socket) do
-  #   {:noreply, assign(socket, results: search(query), query: query)}
-  # end
-
-  # @impl true
-  # def handle_event("search", %{"q" => query}, socket) do
-  #   case search(query) do
-  #     %{^query => vsn} ->
-  #       {:noreply, redirect(socket, external: "https://hexdocs.pm/#{query}/#{vsn}")}
-
-  #     _ ->
-  #       {:noreply,
-  #        socket
-  #        |> put_flash(:error, "No dependencies found matching \"#{query}\"")
-  #        |> assign(results: %{}, query: query)}
-  #   end
-  # end
-
-  # defp search(query) do
-  #   if not AgarexWeb.Endpoint.config(:code_reloader) do
-  #     raise "action disabled when not in development"
-  #   end
-
-  #   for {app, desc, vsn} <- Application.started_applications(),
-  #       app = to_string(app),
-  #       String.starts_with?(app, query) and not List.starts_with?(desc, ~c"ERTS"),
-  #       into: %{},
-  #       do: {app, vsn}
-  # end
+  defp normalize_event(event) do
+    String.split(event, "/")
+  end
 end

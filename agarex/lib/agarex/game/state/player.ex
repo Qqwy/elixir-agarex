@@ -9,8 +9,8 @@ defmodule Agarex.Game.State.Player do
       size: bit_size(name),
       position: {10, 20},
       velocity: {1, 1},
-      alive?: true
-      }
+      alive?: true,
+    }
   end
 
   def move(player, dt) do
@@ -47,5 +47,9 @@ defmodule Agarex.Game.State.Player do
 
     put_in(player.alive?, false)
     |> IO.inspect
+  end
+
+  def alter_velocity(player, velocity) when tuple_size(velocity) == 2 do
+    put_in(player.velocity, velocity)
   end
 end

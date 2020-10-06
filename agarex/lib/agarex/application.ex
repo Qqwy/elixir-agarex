@@ -15,7 +15,7 @@ defmodule Agarex.Application do
       AgarexWeb.Endpoint,
       # Start a worker by calling: Agarex.Worker.start_link(arg)
       # {Agarex.Worker, arg}
-      Agarex.Game
+      Agarex.Game.Server
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html
