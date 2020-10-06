@@ -32,29 +32,21 @@ defmodule Agarex.Game.State.Player do
     rb = :math.sqrt(b.size / :math.pi)
     radii =  ra + rb
 
-    # Distance between center points is smaller than the radii
+    # Circles overlap when the distance between center points
+    # is smaller than the sum of the radii
+    # (Pythagoras)
     dx*dx + dy*dy < radii*radii
   end
 
   def grow(player, size) do
-    IO.inspect(player)
-    IO.puts("growing player #{player.name}")
-
     update_in(player.size, &(&1 + size))
-    |> IO.inspect
   end
 
   def kill(player) do
-    IO.inspect(player)
-    IO.puts("killing player #{player.name}")
-
     put_in(player.alive?, false)
-    |> IO.inspect
   end
 
   def alter_velocity(player, velocity) when tuple_size(velocity) == 2 do
-    IO.inspect({"Old velocity:", player.velocity})
-    IO.inspect({"New velocity:", velocity})
     put_in(player.velocity, velocity)
   end
 end
