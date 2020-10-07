@@ -107,6 +107,9 @@ svg.app {
 }
 
 svg {
+    background-color: white;
+    border: 1px solid black;
+
     circle.player {
         fill: purple;
         stroke: black;
@@ -126,4 +129,26 @@ svg {
             stroke: rgba(255, 255, 255, 0);
         }
     }
+}
+
+.ingame_scores{
+    position: fixed;
+    top: 0;
+    left: 0;
+    color: black;
+    font-size: 0.7em;
+    padding: 20px;
+
+    pointer-events: none;
+}
+
+.ingame_time{
+    position: fixed;
+    top: 0;
+    right: 0;
+    color: black;
+    font-size: 2em;
+    padding: 20px;
+
+    pointer-events: none;
 }

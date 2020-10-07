@@ -27,6 +27,7 @@ defmodule Agarex.Game.Server do
     GenServer.call(__MODULE__, {:add_player, name})
   end
 
+  @impl true
   def handle_call({:add_player, name}, _from, state) do
     {game_state, player_index} = State.add_player(state.game_state, name)
     state = put_in(state.game_state, game_state)
@@ -45,23 +46,25 @@ defmodule Agarex.Game.Server do
     {:noreply, state}
   end
 
-  @impl true
   defp tick(state) do
     new_time = System.monotonic_time()
     delta_time = new_time - state.time
 
-    game_state = State.tick(state.game_state, delta_time)
-    Phoenix.PubSub.broadcast(Agarex.PubSub, "game/tick", {"game/tick", game_state})
-
-    scores = State.highscores(game_state)
     total_time = new_time - state.start_time
     rest_seconds = @game_round_length - System.convert_time_unit(total_time, :native, :second)
-    Phoenix.PubSub.broadcast(Agarex.PubSub, "game/scores", {"game/scores", %{scores: scores, time: rest_seconds, last_game_scores: state.last_game_scores}})
+
+    game_state = State.tick(state.game_state, delta_time)
+
+    scores = State.highscores(game_state)
+
 
     if rest_seconds < 0 do
       Phoenix.PubSub.broadcast(Agarex.PubSub, "game/over", {"game/over", %{}})
       initial_state(scores)
     else
+      Phoenix.PubSub.broadcast(Agarex.PubSub, "game/scores", {"game/scores", %{scores: scores, time: rest_seconds, last_game_scores: state.last_game_scores}})
+      Phoenix.PubSub.broadcast(Agarex.PubSub, "game/tick", {"game/tick", %{game_state: game_state}})
+
       %{state | time: new_time, game_state: game_state}
     end
   end
