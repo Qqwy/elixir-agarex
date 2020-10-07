@@ -7,7 +7,7 @@ defmodule Agarex.Game.State.Player do
     %__MODULE__{
       name: name,
       size: 10,
-      position: {100 * :random.uniform(), 100 * :random.uniform()},
+      position: {300 * :random.uniform(), 300 * :random.uniform()},
       velocity: {0, 0},
       alive?: true,
     }
