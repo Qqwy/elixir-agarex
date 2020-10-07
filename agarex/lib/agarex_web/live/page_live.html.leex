@@ -1,30 +1,32 @@
 <!-- <svg class="app" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"> -->
 <!--   <circle cx="50" cy="50" r="1" class="player"/> -->
 <!-- </svg> -->
-<svg class="app" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"
-     phx-window-keydown="controls/key_down"
-     phx-window-keyup="controls/key_up"
-     >
-    <%= if @local && @local.game_state do %>
+<svg
+  class="app"
+  viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"
+  phx-window-keydown="controls/key_down"
+  phx-window-keyup="controls/key_up"
+>
+  <%= if @local && @local.game_state do %>
     <% current = Local.current_player(@local) %>
     <%= for player <- @local.game_state.players do %>
-        <% {x, y} = player.position %>
-        <!-- TODO offset with current player's position -->
-        <%= if player.alive? do %>
-          <circle
-              cx="<%= x %>"
-              cy="<%= y %>"
-              r="<%= :math.sqrt(player.size / :math.pi) %>"
-              class="player <%= relative_size_class(player, current) %>"
-          />
-          <% else %>
-          <circle
-              cx="<%= x %>"
-              cy="<%= y %>"
-              r="<%= :math.sqrt(player.size / :math.pi) %>"
-              class="player dead"
-          />
-          <% end %>
-      <% end %>
+      <% {x, y} = player.position %>
+      <!-- TODO offset with current player's position -->
+      <%= if player.alive? do %>
+        <circle
+            cx="<%= x %>"
+            cy="<%= y %>"
+            r="<%= :math.sqrt(player.size / :math.pi) %>"
+            class="player <%= relative_size_class(player, current) %>"
+        />
+        <% else %>
+        <circle
+            cx="<%= x %>"
+            cy="<%= y %>"
+            r="<%= :math.sqrt(player.size / :math.pi) %>"
+            class="player dead"
+        />
+        <% end %>
     <% end %>
-  </svg>
+  <% end %>
+</svg>
