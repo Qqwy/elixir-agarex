@@ -1,7 +1,7 @@
 defmodule Agarex.Game.State.Player do
   defstruct [:name, :size, :position, :velocity, :alive?]
 
-  @movement_speed 1/50000000
+  @movement_speed 1/30000000
 
   def new(name) do
     %__MODULE__{
