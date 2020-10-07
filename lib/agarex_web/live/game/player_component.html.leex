@@ -1,0 +1,17 @@
+<% {x, y} = @player.position %>
+<!-- TODO offset with current player's position -->
+<%= if @player.alive? do %>
+  <circle
+      cx="<%= x %>"
+      cy="<%= y %>"
+      r="<%= :math.sqrt(@player.size / :math.pi) %>"
+      class="player <%= relative_size_class(@player, @current_player) %>"
+  />
+<% else %>
+  <circle
+      cx="<%= x %>"
+      cy="<%= y %>"
+      r="<%= :math.sqrt(@player.size / :math.pi) %>"
+      class="player dead"
+  />
+<% end %>

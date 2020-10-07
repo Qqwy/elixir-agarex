@@ -36,15 +36,14 @@ defmodule AgarexWeb.GameLive do
   end
 
   defp do_handle_event(raw_event, params, socket) do
-    local = socket.assigns.local
     event = normalize_event(raw_event)
-    {new_state, effects} =
+    {new_local_state, effects} =
       Agarex.Local.handle_event(event, params, socket.assigns.local)
       |> Effect.normalize
 
     socket =
       socket
-      |> assign(:local, new_state)
+      |> assign(:local, new_local_state)
       |> EffectInterpreter.run_effects(effects)
 
     {:noreply, socket}
@@ -52,13 +51,5 @@ defmodule AgarexWeb.GameLive do
 
   defp normalize_event(event) do
     String.split(event, "/")
-  end
-
-  defp relative_size_class(other_player, current_player) do
-    case other_player.size - current_player.size do
-      res when res < 0 -> "smaller"
-      res when res > 0 -> "bigger"
-      _ -> "same_size"
-    end
   end
 end

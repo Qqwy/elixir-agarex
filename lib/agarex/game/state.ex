@@ -1,12 +1,21 @@
 defmodule Agarex.Game.State do
-  alias __MODULE__.Player
+  alias __MODULE__.{Player, Agar}
 
-  defstruct [:players]
+  @agar_count 10
+
+  defstruct [:players, :agar]
 
   def new() do
     %__MODULE__{
-      players: Arrays.new()
+      players: Arrays.new(),
+      agar: init_agar(),
     }
+  end
+
+  defp init_agar() do
+    for id <- (0..@agar_count), into: %{} do
+      {id, Agar.new()}
+    end
   end
 
   def add_player(state, name) do
@@ -31,7 +40,8 @@ defmodule Agarex.Game.State do
   end
 
   defp resolve_collisions(state) do
-    Enum.reduce(colliding_players(state), state, &eat_smaller_feed_larger/2)
+    state = Enum.reduce(colliding_players(state), state, &eat_smaller_feed_larger/2)
+    state = Enum.reduce(players_colliding_with_agar(state), state, &eat_agar/2)
   end
 
   defp colliding_players(state) do
@@ -39,8 +49,6 @@ defmodule Agarex.Game.State do
 
     for {a, a_id} <- alive_players,
       {b, b_id} <- alive_players,
-      a.alive?,
-      b.alive?,
       a_id != b_id,
       a.size < b.size,
       Player.collide?(a, b) do
@@ -56,6 +64,22 @@ defmodule Agarex.Game.State do
       |> update_in([smaller_id], &Player.kill/1)
       |> update_in([larger_id], &Player.grow(&1, smaller_size))
     end)
+  end
+
+  defp players_colliding_with_agar(state) do
+    alive_players = alive_players(state)
+    agar = state.agar
+    for {agar_id, agar} <- agar,
+      {player, player_id} <- alive_players,
+      Player.collide?(player, agar) do
+        {agar_id, player_id}
+    end
+  end
+
+  defp eat_agar({agar_id, player_id}, state) do
+    state
+    |> update_in([Access.key(:players), player_id], &Player.grow(&1, 1))
+    |> update_in([Access.key(:agar), agar_id], fn _ -> Agar.new() end)
   end
 
   defp alive_players(state) do

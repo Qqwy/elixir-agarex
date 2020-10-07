@@ -22,12 +22,9 @@ defmodule Agarex.Local do
           Phoenix.LiveView.push_redirect(socket, to: AgarexWeb.Router.Helpers.page_path(socket, :index), replace: true)
         end}
     end
-    |> IO.inspect(label: :local_handle_event)
   end
 
   def current_player(struct) do
-    IO.inspect(struct)
     get_in(struct, [Access.key(:game_state), Access.key(:players), struct.player_id])
-    |> IO.inspect(label: :current_player)
   end
 end
