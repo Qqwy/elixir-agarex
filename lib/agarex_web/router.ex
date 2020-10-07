@@ -7,8 +7,8 @@ defmodule AgarexWeb.Router do
     plug :fetch_live_flash
     plug :put_root_layout, {AgarexWeb.LayoutView, :root}
     plug :protect_from_forgery
-    # plug :put_secure_browser_headers
-    # plug CultivateWeb.AllowCrossOriginIframe
+    plug :put_secure_browser_headers
+    plug CultivateWeb.AllowCrossOriginIframe
   end
 
   pipeline :api do
