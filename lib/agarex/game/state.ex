@@ -1,7 +1,7 @@
 defmodule Agarex.Game.State do
   alias __MODULE__.{Player, Agar}
 
-  @agar_count 10
+  @agar_count 20
 
   defstruct [:players, :agar]
 
@@ -78,7 +78,7 @@ defmodule Agarex.Game.State do
 
   defp eat_agar({agar_id, player_id}, state) do
     state
-    |> update_in([Access.key(:players), player_id], &Player.grow(&1, 1))
+    |> update_in([Access.key(:players), player_id], &Player.grow(&1, 2))
     |> update_in([Access.key(:agar), agar_id], fn _ -> Agar.new() end)
   end
 

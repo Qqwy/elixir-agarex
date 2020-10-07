@@ -1,18 +1,4 @@
 <div class="game">
-  <svg
-    class="app"
-    viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"
-    phx-window-keydown="controls/key_down"
-    phx-window-keyup="controls/key_up"
-  >
-    <%= if @local && @local.game_state do %>
-      <% current_player = Local.current_player(@local) %>
-      <%= for player <- @local.game_state.players do %>
-          <%= live_component @socket, AgarexWeb.Game.PlayerComponent, player: player, current_player: current_player %>
-      <% end %>
-    <% end %>
-  </svg>
-
   <div class="ingame_scores">
     <%= if @local && @local.scores do %>
       <%= live_component @socket, AgarexWeb.Common.ScoresComponent, scores: @local.scores %>
@@ -24,4 +10,21 @@
       <span><%= @local.time %></span>
     <% end %>
   </div>
+
+  <svg
+    class="app"
+    viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"
+    phx-window-keydown="controls/key_down"
+    phx-window-keyup="controls/key_up"
+  >
+    <%= if @local && @local.game_state do %>
+      <% current_player = Local.current_player(@local) %>
+      <%= for player <- @local.game_state.players do %>
+          <%= live_component @socket, AgarexWeb.Game.PlayerComponent, player: player, current_player: current_player %>
+      <% end %>
+      <%= for {_id, agar} <- @local.game_state.agar do %>
+          <%= live_component @socket, AgarexWeb.Game.AgarComponent, agar: agar, current_player: current_player %>
+      <% end %>
+    <% end %>
+  </svg>
 </div>

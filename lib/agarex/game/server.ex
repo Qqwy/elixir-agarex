@@ -5,7 +5,7 @@ defmodule Agarex.Game.Server do
   @fps 30
   @tick_ms div(1000, @fps)
 
-  @game_round_length 10
+  @game_round_length 180
 
   def start_link(_) do
     GenServer.start_link(__MODULE__, nil, name: __MODULE__)

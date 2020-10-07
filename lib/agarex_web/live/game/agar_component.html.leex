@@ -1,0 +1,7 @@
+<% {dx, dy} = relative_position(@agar, @current_player) %>
+<circle
+    cx="<%= 50 + dx %>"
+    cy="<%= 50 + dy %>"
+    r="<%= @agar.size %>"
+    class="agar"
+/>
