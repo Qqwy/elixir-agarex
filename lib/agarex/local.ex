@@ -4,7 +4,7 @@ defmodule Agarex.Local do
   require Effect
 
   defstruct [:controls, :game_state, :player_id]
-  def new(player_id) do
+  def new(player_id \\ nil) do
     %__MODULE__{controls: Controls.new, game_state: nil, player_id: player_id}
   end
 
