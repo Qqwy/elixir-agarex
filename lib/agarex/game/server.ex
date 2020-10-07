@@ -5,6 +5,8 @@ defmodule Agarex.Game.Server do
   @fps 30
   @tick_ms div(1000, @fps)
 
+  @game_round_length 180
+
   def start_link(_) do
     GenServer.start_link(__MODULE__, nil, name: __MODULE__)
   end
@@ -13,7 +15,12 @@ defmodule Agarex.Game.Server do
   def init(_) do
     Process.send_after(self(), :tick, @tick_ms)
     Phoenix.PubSub.subscribe(Agarex.PubSub, "game/player_velocity")
-    {:ok, %{time: System.monotonic_time(), game_state: State.new()}}
+    {:ok, initial_state()}
+  end
+
+  defp initial_state(last_game_scores \\ []) do
+    start_time = System.monotonic_time()
+    %{start_time: start_time, time: start_time, game_state: State.new(), last_game_scores: []}
   end
 
   def add_player(name) do
@@ -46,6 +53,16 @@ defmodule Agarex.Game.Server do
     game_state = State.tick(state.game_state, delta_time)
     Phoenix.PubSub.broadcast(Agarex.PubSub, "game/tick", {"game/tick", game_state})
 
-    %{state | time: new_time, game_state: game_state}
+    scores = State.highscores(game_state)
+    total_time = new_time - state.start_time
+    rest_seconds = @game_round_length - System.convert_time_unit(total_time, :native, :second)
+    Phoenix.PubSub.broadcast(Agarex.PubSub, "game/scores", {"game/scores", %{scores: scores, time: rest_seconds, last_game_scores: state.last_game_scores}})
+
+    if rest_seconds < 0 do
+      Phoenix.PubSub.broadcast(Agarex.PubSub, "game/over", {"game/over", %{}})
+      initial_state(scores)
+    else
+      %{state | time: new_time, game_state: game_state}
+    end
   end
 end

@@ -1,0 +1,56 @@
+
+<div class="container" >
+  <h1>AgarEx</h1>
+  <p>
+    An example game for the presentation
+    <em>"Multiplayer games &amp; Collaborative Editing with Phoenix LiveView"</em>
+  </p>
+<form phx-submit="start_game" class="join_game_form">
+  <label for="player_name"></label>
+  <input name="player_name" type="text" value="" placeholder="Player Name"/>
+  <button>Join game!</button>
+</form>
+
+<%= if @time do %>
+  <h2>
+    Remaining game time: <%= @time %>
+  </h2>
+<% end %>
+
+<%= if @scores != [] do %>
+  <h2>
+    Current scores:
+  </h2>
+  <ol class="current_scores">
+  <%= for {player_name, score} <- @scores do %>
+      <li>
+        <span class="player_name">
+          <%= player_name %>
+        </span>
+        <span class="score">
+          <%= score %>
+        </span>
+      </li>
+  <% end %>
+  </ol>
+<% end %>
+</div>
+
+<%= if @last_game_scores != [] do %>
+  <h2>
+    Scores of last game:
+  </h2>
+  <ol class="current_scores">
+  <%= for {player_name, score} <- @last_game_scores do %>
+      <li>
+        <span class="player_name">
+          <%= player_name %>
+        </span>
+        <span class="score">
+          <%= score %>
+        </span>
+      </li>
+  <% end %>
+  </ol>
+<% end %>
+</div>

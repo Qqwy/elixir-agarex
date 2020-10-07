@@ -35,11 +35,7 @@ defmodule Agarex.Game.State do
   end
 
   defp colliding_players(state) do
-    alive_players =
-      state.players
-      |> Arrays.to_list
-      |> Enum.with_index
-      |> Enum.filter(fn {player, _index} ->  player.alive? end)
+    alive_players = alive_players(state)
 
     for {a, a_id} <- alive_players,
       {b, b_id} <- alive_players,
@@ -53,8 +49,6 @@ defmodule Agarex.Game.State do
   end
 
   defp eat_smaller_feed_larger({smaller_id, larger_id}, state) do
-    IO.inspect({smaller_id, larger_id})
-    IO.inspect(state.players)
     smaller_size = get_in(state, [Access.key(:players), smaller_id, Access.key(:size)])
 
     update_in(state.players, fn players ->
@@ -62,5 +56,19 @@ defmodule Agarex.Game.State do
       |> update_in([smaller_id], &Player.kill/1)
       |> update_in([larger_id], &Player.grow(&1, smaller_size))
     end)
+  end
+
+  defp alive_players(state) do
+    state.players
+    |> Arrays.to_list
+    |> Enum.with_index
+    |> Enum.filter(fn {player, _index} ->  player.alive? end)
+  end
+
+  def highscores(state) do
+    state.players
+    |> Enum.sort_by(fn player -> player.size end)
+    |> Enum.map(fn player -> {player.name, player.size} end)
+    |> Enum.uniq_by(fn {name, size} -> name end) # Keeps first, e.g. highest, occurrence of a name
   end
 end
