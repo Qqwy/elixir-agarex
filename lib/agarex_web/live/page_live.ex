@@ -19,7 +19,6 @@ defmodule AgarexWeb.PageLive do
       |> assign(:last_game_scores, params.last_game_scores)
       |> assign(:scores, params.scores)
       |> assign(:time, params.time)
-      |> IO.inspect
 
     {:noreply, socket}
   end

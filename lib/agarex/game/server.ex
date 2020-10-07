@@ -5,7 +5,7 @@ defmodule Agarex.Game.Server do
   @fps 30
   @tick_ms div(1000, @fps)
 
-  @game_round_length 180
+  @game_round_length 10
 
   def start_link(_) do
     GenServer.start_link(__MODULE__, nil, name: __MODULE__)
@@ -20,7 +20,7 @@ defmodule Agarex.Game.Server do
 
   defp initial_state(last_game_scores \\ []) do
     start_time = System.monotonic_time()
-    %{start_time: start_time, time: start_time, game_state: State.new(), last_game_scores: []}
+    %{start_time: start_time, time: start_time, game_state: State.new(), last_game_scores: last_game_scores}
   end
 
   def add_player(name) do

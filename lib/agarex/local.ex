@@ -4,7 +4,7 @@ defmodule Agarex.Local do
   require Effect
 
   defstruct [:controls, :game_state, :player_id]
-  def new(player_id \\ nil) do
+  def new(player_id) do
     %__MODULE__{controls: Controls.new, game_state: nil, player_id: player_id}
   end
 
@@ -15,6 +15,10 @@ defmodule Agarex.Local do
         {struct, effects ++ fn -> Controls.broadcast_velocity(struct.controls, struct.player_id) end}
       ["game" , "tick"] ->
         put_in(struct.game_state, params)
+      ["game", "over"] ->
+        {struct, fn socket ->
+          Phoenix.LiveView.push_redirect(socket, to: AgarexWeb.Router.Helpers.page_path(socket, :index), replace: true)
+        end}
     end
   end
 

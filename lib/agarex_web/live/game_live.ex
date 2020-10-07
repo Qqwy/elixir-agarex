@@ -10,6 +10,7 @@ defmodule AgarexWeb.GameLive do
       if connected?(socket) do
         player_index = Agarex.Game.Server.add_player(player_name)
         Phoenix.PubSub.subscribe(Agarex.PubSub, "game/tick")
+        Phoenix.PubSub.subscribe(Agarex.PubSub, "game/over")
 
         socket
         |> assign(:local, Agarex.Local.new(player_index))
