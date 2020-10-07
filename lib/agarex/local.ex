@@ -14,7 +14,14 @@ defmodule Agarex.Local do
         {struct, effects} = Effect.effectful_update_in(struct.controls, &Controls.handle_event(rest, params, &1))
         {struct, effects ++ fn -> Controls.broadcast_velocity(struct.controls, struct.player_id) end}
       ["game" , "tick"] ->
-        %{struct | game_state: params.game_state}
+        struct = %{struct | game_state: params.game_state}
+        if current_player(struct).alive? do
+          struct
+        else
+          {struct, fn socket ->
+            Phoenix.LiveView.push_redirect(socket, to: AgarexWeb.Router.Helpers.page_path(socket, :index), replace: true)
+          end}
+        end
       ["game" , "scores"] ->
         %{struct | scores: params.scores, time: params.time}
       ["game", "over"] ->

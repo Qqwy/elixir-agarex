@@ -1,7 +1,7 @@
 defmodule Agarex.Game.State do
   alias __MODULE__.{Player, Agar}
 
-  @agar_count 20
+  @agar_count 50
 
   defstruct [:players, :agar]
 
@@ -19,7 +19,6 @@ defmodule Agarex.Game.State do
   end
 
   def add_player(state, name) do
-    IO.inspect("Adding player: #{name}")
     state = update_in(state.players, fn players ->
       Arrays.append(players, Player.new(name))
     end)
@@ -91,7 +90,7 @@ defmodule Agarex.Game.State do
 
   def highscores(state) do
     state.players
-    |> Enum.sort_by(fn player -> player.size end)
+    |> Enum.sort_by(fn player -> player.size end, :desc)
     |> Enum.map(fn player -> {player.name, player.size} end)
     |> Enum.uniq_by(fn {name, size} -> name end) # Keeps first, e.g. highest, occurrence of a name
   end
