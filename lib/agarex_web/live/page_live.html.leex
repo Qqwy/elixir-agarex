@@ -21,18 +21,7 @@
   <h2>
     Current scores:
   </h2>
-  <ol class="current_scores">
-  <%= for {player_name, score} <- @scores do %>
-      <li>
-        <span class="player_name">
-          <%= player_name %>
-        </span>
-        <span class="score">
-          <%= score %>
-        </span>
-      </li>
-  <% end %>
-  </ol>
+  <%= live_component @socket, AgarexWeb.Common.ScoresComponent, scores: @scores %>
 <% end %>
 </div>
 
@@ -40,17 +29,6 @@
   <h2>
     Scores of last game:
   </h2>
-  <ol class="current_scores">
-  <%= for {player_name, score} <- @last_game_scores do %>
-      <li>
-        <span class="player_name">
-          <%= player_name %>
-        </span>
-        <span class="score">
-          <%= score %>
-        </span>
-      </li>
-  <% end %>
-  </ol>
+  <%= live_component @socket, AgarexWeb.Common.ScoresComponent, scores: @last_game_scores %>
 <% end %>
 </div>

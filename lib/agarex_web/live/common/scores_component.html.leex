@@ -1,0 +1,12 @@
+<ol class="scores">
+  <%= for {player_name, score} <- @scores do %>
+      <li>
+        <span class="player_name">
+          <%= player_name %>
+        </span>
+        <span class="score">
+          <%= score %>
+        </span>
+      </li>
+  <% end %>
+</ol>
