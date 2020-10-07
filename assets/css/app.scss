@@ -101,14 +101,14 @@ main.wrapper {
 }
 
 svg.app {
-    position: inline-block;
+    display: inline-block;
     max-height: 95vh;
-    max-width: 100vw;
+    max-width: 95vh;
 }
 
 svg {
     background-color: white;
-    border: 1px solid black;
+    border: 1px solid gray;
 
     circle.player {
         fill: purple;
@@ -128,6 +128,10 @@ svg {
             fill: rgba(255, 255, 255, 0);
             stroke: rgba(255, 255, 255, 0);
         }
+    }
+
+    circle.agar {
+        fill: green;
     }
 }
 
