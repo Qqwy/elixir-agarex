@@ -107,7 +107,7 @@ svg.app {
 }
 
 svg {
-    background-color: white;
+    background-color: #eee;
     border: 1px solid gray;
     text-align: center;
 
@@ -139,6 +139,11 @@ svg {
 
     text.player_name {
         font-size: 3px;
+    }
+
+    .game_boundaries {
+        stroke: gray;
+        fill: white;
     }
 }
 

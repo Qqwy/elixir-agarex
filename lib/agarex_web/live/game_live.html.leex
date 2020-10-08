@@ -1,5 +1,6 @@
 <div class="game">
   <div class="ingame_scores">
+    <h3>Current scores:</h3>
     <%= if @local && @local.scores do %>
       <%= live_component @socket, AgarexWeb.Common.ScoresComponent, scores: @local.scores %>
     <% end %>
@@ -19,6 +20,15 @@
   >
     <%= if @local && @local.game_state do %>
       <% current_player = Local.current_player(@local) %>
+      <% {cx, cy} = current_player.position %>
+      <rect
+        x="<%= -cx + 50 %>"
+        y="<%= -cy + 50 %>"
+        height="300"
+        width="300"
+        class="game_boundaries"
+      />
+
       <%= for player <- @local.game_state.players do %>
           <%= live_component @socket, AgarexWeb.Game.PlayerComponent, player: player, current_player: current_player %>
       <% end %>
