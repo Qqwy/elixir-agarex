@@ -1,9 +1,13 @@
-
 <div class="container" >
   <h1>AgarEx</h1>
   <p>
     An example game for the presentation
-    <em>"Multiplayer games &amp; Collaborative Editing with Phoenix LiveView"</em>
+    <a href="https://slides.com/qqwy/deck">
+      <em>"Multiplayer games &amp; Collaborative Editing with Phoenix LiveView"</em>
+    </a>
+  </p>
+  <p>
+    <a href="https://github.com/Qqwy/elixir-agarex/">GitHub repository</a>
   </p>
 <form phx-change="name_change" phx-submit="start_game" action="#" class="join_game_form" id="start_game_form">
   <label for="player_name"></label>
@@ -13,7 +17,7 @@
 
 <%= if @time do %>
   <h2>
-    Remaining game time: <%= @time %>
+    Remaining game round time: <%= @time %>s
   </h2>
 <% end %>
 

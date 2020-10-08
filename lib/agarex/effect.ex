@@ -15,4 +15,3 @@ defmodule Agarex.Effect do
   def normalize({state, effect}), do: {state, [effect]}
   def normalize(state), do: {state, []}
 end
-
