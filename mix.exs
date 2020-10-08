@@ -44,7 +44,8 @@ defmodule Agarex.MixProject do
       {:gettext, "~> 0.11"},
       {:jason, "~> 1.0"},
       {:plug_cowboy, "~> 2.0"},
-      {:arrays, "~> 0.1.0"}
+      {:observer_cli, "~> 1.5"},
+      {:arrays, "~> 0.1.0"},
     ]
   end
 
