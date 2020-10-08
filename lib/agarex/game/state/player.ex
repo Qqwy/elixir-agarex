@@ -1,4 +1,5 @@
 defmodule Agarex.Game.State.Player do
+  alias Agarex.Game.State
   defstruct [:name, :size, :position, :velocity, :alive?]
 
   @movement_speed 1/30000000
@@ -7,7 +8,7 @@ defmodule Agarex.Game.State.Player do
     %__MODULE__{
       name: name,
       size: 10,
-      position: {300 * :random.uniform(), 300 * :random.uniform()},
+      position: {State.board_width() * :random.uniform(), State.board_height() * :random.uniform()},
       velocity: {0, 0},
       alive?: true,
     }
@@ -19,8 +20,21 @@ defmodule Agarex.Game.State.Player do
       {vx, vy} = player.velocity
       x2 = x + vx * dt * @movement_speed
       y2 = y + vy * dt * @movement_speed
-      {x2, y2}
+
+
+      clamp({x2, y2}, player.size)
     end)
+  end
+
+  defp clamp({x2, y2}, size) do
+    radius = :math.sqrt(size / :math.pi)
+    x2 = max(radius, x2)
+    x2 = min(State.board_width() - radius, x2)
+
+    y2 = max(radius, y2)
+    y2 = min(State.board_height() - radius, y2)
+
+    {x2, y2}
   end
 
   def collide?(a, b) do

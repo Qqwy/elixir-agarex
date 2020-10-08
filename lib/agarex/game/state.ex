@@ -94,4 +94,12 @@ defmodule Agarex.Game.State do
     |> Enum.map(fn player -> {player.name, player.size} end)
     |> Enum.uniq_by(fn {name, size} -> name end) # Keeps first, e.g. highest, occurrence of a name
   end
+
+  def board_width() do
+    300
+  end
+
+  def board_height() do
+    300
+  end
 end
