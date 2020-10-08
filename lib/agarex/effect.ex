@@ -18,4 +18,12 @@ defmodule Agarex.Effect do
   def normalize({state, effects}) when is_list(effects), do: {state, effects}
   def normalize({state, effect}), do: {state, [effect]}
   def normalize(state), do: {state, []}
+
+  def run_effects(socket, effects, interpreter \\ Application.get_env(:agarex, :effects_interpreter, Agarex.EffectInterpreter) ) do
+    Enum.reduce(effects, socket, &interpreter.run_effect(&2, &1))
+  end
+
+  def run_effect(socket, effect, interpreter \\ Application.get_env(:agarex, :effects_interpreter, Agarex.EffectInterpreter) ) do
+    interpreter.run_effect(socket, effect)
+  end
 end

@@ -46,6 +46,6 @@ defmodule Agarex.Game.LocalState.Controls do
   defp translate(_), do: nil
 
   def broadcast_velocity(controls, player_id) do
-    Phoenix.PubSub.broadcast(Agarex.PubSub, "game/player_velocity", {"game/player_velocity", %{player_id: player_id, velocity: to_velocity(controls)}})
+    Agarex.Effect.PubSubBroadcast.new("game/player_velocity", %{player_id: player_id, velocity: to_velocity(controls)})
   end
 end

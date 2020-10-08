@@ -1,4 +1,5 @@
 defmodule Agarex.EffectInterpreter do
+  alias Agarex.Effect
   @moduledoc """
   Running effects later.
 
@@ -7,20 +8,28 @@ defmodule Agarex.EffectInterpreter do
   you could e.g. use a different one during testing.
   """
 
-  def run_effects(socket, effects) do
-    Enum.reduce(effects, socket, &run_effect/2)
-  end
+  def run_effect(socket, effect) do
+    case effect do
+      # Define specialized effects up here.
+      %Effect.LiveviewPushRedirect{} ->
+        Phoenix.LiveView.push_redirect(socket, to: effect.path, replace: true)
 
-  # Define specialized effects up here.
+      %Effect.PubSubBroadcast{} ->
+        Phoenix.PubSub.broadcast(Agarex.PubSub, effect.topic, {effect.topic, effect.params})
+        socket
 
-  # Base cases for 'custom' effects
-  # that are not (yet) specialized
-  defp run_effect(effect, socket) when is_function(effect, 0) do
-    effect.()
-    socket
-  end
+      %Effect.PubSubSubscribe{} ->
+        Phoenix.PubSub.subscribe(Agarex.PubSub, effect.topic)
+        socket
 
-  defp run_effect(effect, socket) when is_function(effect, 1) do
-    effect.(socket)
+      # Base cases for 'custom' effects
+      # that are not (yet) specialized
+      effect when is_function(effect, 0) ->
+        effect.()
+        socket
+
+      effect when is_function(effect, 1) ->
+        effect.(socket)
+    end
   end
 end

@@ -21,22 +21,20 @@ defmodule Agarex.Game.LocalState do
     case event do
       ["controls" | rest] ->
         {struct, effects} = Effect.effectful_update_in(struct.controls, &Controls.handle_event(rest, params, &1))
-        {struct, effects ++ fn -> Controls.broadcast_velocity(struct.controls, struct.player_id) end}
+        {struct, effects ++ [Controls.broadcast_velocity(struct.controls, struct.player_id)] }
       ["game" , "tick"] ->
         struct = %{struct | game_state: params.game_state}
         if current_player(struct).alive? do
           struct
         else
-          {struct, fn socket ->
-            Phoenix.LiveView.push_redirect(socket, to: AgarexWeb.Router.Helpers.page_path(socket, :index), replace: true)
-          end}
+          index_redirect = Effect.LiveviewPushRedirect.new(AgarexWeb.Router.Helpers.page_path(AgarexWeb.Endpoint, :index))
+          {struct, [index_redirect]}
         end
       ["game" , "scores"] ->
         %{struct | scores: params.scores, time: params.time}
       ["game", "over"] ->
-        {struct, fn socket ->
-          Phoenix.LiveView.push_redirect(socket, to: AgarexWeb.Router.Helpers.page_path(socket, :index), replace: true)
-        end}
+        index_redirect = Effect.LiveviewPushRedirect.new(AgarexWeb.Router.Helpers.page_path(AgarexWeb.Endpoint, :index))
+        {struct, [index_redirect]}
     end
   end
 

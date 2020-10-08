@@ -1,6 +1,8 @@
 defmodule AgarexWeb.PageLive do
   use AgarexWeb, :live_view
 
+  alias Agarex.Effect
+
   @moduledoc """
   Main LiveView started on application load, keeping track of general game information
   and setting the player's name before joining a game.
@@ -35,8 +37,10 @@ defmodule AgarexWeb.PageLive do
   end
 
   def handle_event("start_game", %{"player_name" => player_name}, socket) do
-    # Handle live redirect
-    {:noreply, push_redirect(socket, to: AgarexWeb.Router.Helpers.game_path(socket, :index, %{"player_name" => player_name}), replace: true)}
+    redirect = Effect.LiveviewPushRedirect.new(AgarexWeb.Router.Helpers.game_path(AgarexWeb.Endpoint, :index, %{"player_name" => player_name}))
+    socket = Effect.run_effect(socket, redirect)
+
+    {:noreply, socket}
   end
 
   def handle_event("name_change", %{"player_name" => player_name}, socket) do

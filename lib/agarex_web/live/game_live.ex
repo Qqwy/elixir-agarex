@@ -14,11 +14,14 @@ defmodule AgarexWeb.GameLive do
     socket =
       if connected?(socket) do
         player_index = Agarex.Game.Server.add_player(player_name)
-        Phoenix.PubSub.subscribe(Agarex.PubSub, "game/tick")
-        Phoenix.PubSub.subscribe(Agarex.PubSub, "game/scores")
-        Phoenix.PubSub.subscribe(Agarex.PubSub, "game/over")
+        effects = [
+          Effect.PubSubSubscribe.new("game/tick"),
+          Effect.PubSubSubscribe.new("game/scores"),
+          Effect.PubSubSubscribe.new("game/over"),
+        ]
 
         socket
+        |> Effect.run_effects(effects)
         |> assign(:local, LocalState.new(player_index))
       else
         socket
@@ -49,7 +52,7 @@ defmodule AgarexWeb.GameLive do
     socket =
       socket
       |> assign(:local, new_local_state)
-      |> EffectInterpreter.run_effects(effects)
+      |> Effect.run_effects(effects, EffectInterpreter)
 
     {:noreply, socket}
   end
