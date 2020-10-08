@@ -89,8 +89,9 @@ defmodule Agarex.Game.Server.State.World do
   end
 
   defp eat_agar({agar_id, player_id}, state) do
+    agar = get_in(state, [Access.key(:agar), agar_id])
     state
-    |> update_in([Access.key(:players), player_id], &Player.grow(&1, 2))
+    |> update_in([Access.key(:players), player_id], &Player.grow(&1, agar.size))
     |> update_in([Access.key(:agar), agar_id], fn _ -> Agar.new() end)
   end
 

@@ -37,7 +37,8 @@ defmodule AgarexWeb.PageLive do
   end
 
   def handle_event("start_game", %{"player_name" => player_name}, socket) do
-    redirect = Effect.LiveviewPushRedirect.new(AgarexWeb.Router.Helpers.game_path(AgarexWeb.Endpoint, :index, %{"player_name" => player_name}))
+    url = AgarexWeb.Router.Helpers.game_path(AgarexWeb.Endpoint, :index, %{"player_name" => player_name})
+    redirect = Effect.LiveviewPushRedirect.new(url)
     socket = Effect.run_effect(socket, redirect)
 
     {:noreply, socket}

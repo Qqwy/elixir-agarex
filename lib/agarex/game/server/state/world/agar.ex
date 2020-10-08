@@ -11,7 +11,7 @@ defmodule Agarex.Game.Server.State.World.Agar do
   def new() do
     %__MODULE__{
       position: {World.board_width() * :random.uniform(), World.board_height() * :random.uniform()},
-      size: 1
+      size: round(1 + :random.uniform * 5)
     }
   end
 end

@@ -1,7 +1,8 @@
 <% {dx, dy} = relative_position(@agar, @current_player) %>
+<% radius = :math.sqrt(@agar.size / :math.pi) %>
 <circle
     cx="<%= 50 + dx %>"
     cy="<%= 50 + dy %>"
-    r="<%= @agar.size %>"
+    r="<%= radius %>"
     class="agar"
 />
