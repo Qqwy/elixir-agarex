@@ -9,6 +9,7 @@ defmodule AgarexWeb.PageLive do
       |> assign(:last_game_scores, [])
       |> assign(:scores, [])
       |> assign(:time, nil)
+      |> assign(:player_name, "")
 
     {:ok, socket}
   end
@@ -26,5 +27,13 @@ defmodule AgarexWeb.PageLive do
   def handle_event("start_game", %{"player_name" => player_name}, socket) do
     # Handle live redirect
     {:noreply, push_redirect(socket, to: AgarexWeb.Router.Helpers.game_path(socket, :index, %{"player_name" => player_name}), replace: true)}
+  end
+
+  def handle_event("name_change", %{"player_name" => player_name}, socket) do
+    socket =
+      socket
+      |> assign(:player_name, player_name)
+
+    {:noreply, socket}
   end
 end
