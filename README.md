@@ -2,7 +2,7 @@
 
 An example game for the presentation [Multiplayer Games & Collaborative Editing with Phoenix LiveView](https://slides.com/qqwy/deck) which was written for ElixirConf.EU 2020.
 
-Test out the live running game here: [https://agarex.gigalixirapp.com/](https://agarex.gigalixirapp.com/).
+Check out the live running game here: [https://agarex.gigalixirapp.com/](https://agarex.gigalixirapp.com/).
 
 ---
 
