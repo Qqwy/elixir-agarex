@@ -1,4 +1,4 @@
-defmodule CultivateWeb.AllowCrossOriginIframe do
+defmodule AgarexWeb.AllowCrossOriginIframe do
   import Plug.Conn
 
   def init(opts), do: opts
