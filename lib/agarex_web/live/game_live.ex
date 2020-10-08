@@ -1,6 +1,10 @@
 defmodule AgarexWeb.GameLive do
   use AgarexWeb, :live_view
 
+  @moduledoc """
+  Main LiveView treating the running game from the perspective of a single user.
+  """
+
   alias Agarex.Game.LocalState
   alias Agarex.{Effect, EffectInterpreter}
   require Agarex.Effect

@@ -3,6 +3,15 @@ defmodule Agarex.Game.LocalState do
   alias Agarex.Effect
   require Effect
 
+  @moduledoc """
+  This module takes care of the state that is local to a single brower tab.
+
+  It does two (closely related) things:
+
+  1. Defining the local state struct
+  2. Defining how this struct transforms based on certain events (from either the browser or broadcasted by the `Agarex.Game.Server` GenServer).
+  """
+
   defstruct [:controls, :game_state, :player_id, :time, :scores]
   def new(player_id) do
     %__MODULE__{controls: Controls.new, game_state: nil, player_id: player_id, time: nil, scores: []}

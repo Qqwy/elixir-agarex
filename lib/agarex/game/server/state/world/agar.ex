@@ -1,6 +1,12 @@
 defmodule Agarex.Game.Server.State.World.Agar do
   alias Agarex.Game.Server.State.World
 
+  @moduledoc """
+  A very simple struct,
+  containing the position of a particular piece of 'agar',
+  the food that all players can eat.
+  """
+
   defstruct [:position, :size]
   def new() do
     %__MODULE__{

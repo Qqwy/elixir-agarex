@@ -1,4 +1,8 @@
 defmodule Agarex.Effect do
+  @moduledoc """
+  This module contains some helper functions to work with effectful transformations.
+  """
+
   def effectful_update_in(struct, access_list, function) do
     {result, effects} = normalize(function.(Access.get(struct, access_list)))
     {put_in(struct, access_list, result), effects}

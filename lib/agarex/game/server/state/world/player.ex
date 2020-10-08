@@ -2,6 +2,24 @@ defmodule Agarex.Game.Server.State.World.Player do
   alias Agarex.Game.Server.State.World
   defstruct [:name, :size, :position, :velocity, :alive?]
 
+  @moduledoc """
+  A player's character within the game.
+
+  Note that a player's character has no concept of a 'keyboard' that controls it;
+  (a basic separation of concerns).
+  That part is implemented in `Agarex.Game.LocalState.Controls`.
+
+  We keep track also of 'dead' players for two reasons:
+
+  1. easy 'death' animations. (They are removed anyway when the next round starts a couple of minutes later)
+  2. to keep track of the high scores while the game is running.
+
+  The 'size' is how large a player is (and also their score).
+  Visually this is expressed as the 'area' of the player's circle,
+  which means that when we need to do math that requires the radius of the circle,
+  we have to convert using the well-known trigonometric formula `radius = sqrt(area / pi)`.
+  """
+
   @movement_speed 1/30000000
 
   def new(name) do

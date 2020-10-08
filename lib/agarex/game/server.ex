@@ -7,6 +7,17 @@ defmodule Agarex.Game.Server do
 
   @game_round_length 180
 
+  @moduledoc """
+  A named GenServer which runs the Agar game.
+
+  Dispatches a `tick` message to itself every #{@tick_ms} milliseconds,
+  which then runs an update of the world state (thus at ~#{@fps} frames per second).
+
+  After #{@game_round_length} seconds, the state of the GenServer is reset,
+  to run the next game round.
+  """
+
+
   def start_link(_) do
     GenServer.start_link(__MODULE__, nil, name: __MODULE__)
   end
@@ -15,12 +26,7 @@ defmodule Agarex.Game.Server do
   def init(_) do
     Process.send_after(self(), :tick, @tick_ms)
     Phoenix.PubSub.subscribe(Agarex.PubSub, "game/player_velocity")
-    {:ok, initial_state()}
-  end
-
-  defp initial_state(last_game_scores \\ []) do
-    start_time = System.monotonic_time()
-    %{start_time: start_time, time: start_time, game_state: State.World.new(), last_game_scores: last_game_scores}
+    {:ok, State.new()}
   end
 
   def add_player(name) do
@@ -60,7 +66,7 @@ defmodule Agarex.Game.Server do
 
     if rest_seconds < 0 do
       Phoenix.PubSub.broadcast(Agarex.PubSub, "game/over", {"game/over", %{}})
-      initial_state(scores)
+      State.new(scores)
     else
       Phoenix.PubSub.broadcast(Agarex.PubSub, "game/scores", {"game/scores", %{scores: scores, time: rest_seconds, last_game_scores: state.last_game_scores}})
       Phoenix.PubSub.broadcast(Agarex.PubSub, "game/tick", {"game/tick", %{game_state: game_state}})

@@ -3,6 +3,19 @@ defmodule Agarex.Game.Server.State.World do
 
   @agar_count 50
 
+  @moduledoc """
+  Module handling the main game world state.
+
+  The world consists of player characters and agar snippets.
+
+  The 'gist' of the game might be considered checking and handling the collissions
+  between the different characters correctly; that is what this module also does.
+
+  Since this module is currently driven relatively directly from the `Agarex.Game.Server`
+  it does not have the full-on separated-effects style that I'd like;
+  this could be changed if it for instance grows in complexity in the future.
+  """
+
   defstruct [:players, :agar]
 
   def new() do
@@ -92,7 +105,7 @@ defmodule Agarex.Game.Server.State.World do
     state.players
     |> Enum.sort_by(fn player -> player.size end, :desc)
     |> Enum.map(fn player -> {player.name, player.size} end)
-    |> Enum.uniq_by(fn {name, size} -> name end) # Keeps first, e.g. highest, occurrence of a name
+    |> Enum.uniq_by(fn {name, size} -> name end) # Keeps first, e.g. highest scoring, occurrence of a name
   end
 
   def board_width() do

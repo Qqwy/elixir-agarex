@@ -1,6 +1,10 @@
 defmodule AgarexWeb.Game.PlayerComponent do
   use Phoenix.LiveComponent
 
+  @moduledoc """
+  Stateless LiveComponent in charge of rendering a player character in the game world.
+  """
+
   defp relative_position(player, current_player) do
     {x, y} = player.position
     {cx, cy} = current_player.position
