@@ -109,6 +109,7 @@ svg.app {
 svg {
     background-color: white;
     border: 1px solid gray;
+    text-align: center;
 
     circle.player {
         fill: purple;
@@ -134,6 +135,10 @@ svg {
         fill: green;
         stroke: black;
         stroke-width: 0.3;
+    }
+
+    text.player_name {
+        font-size: 3px;
     }
 }
 
