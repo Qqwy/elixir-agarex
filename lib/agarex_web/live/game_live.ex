@@ -1,7 +1,8 @@
 defmodule AgarexWeb.GameLive do
   use AgarexWeb, :live_view
 
-  alias Agarex.{Local, Effect, EffectInterpreter}
+  alias Agarex.Game.LocalState
+  alias Agarex.{Effect, EffectInterpreter}
   require Agarex.Effect
 
 
@@ -14,7 +15,7 @@ defmodule AgarexWeb.GameLive do
         Phoenix.PubSub.subscribe(Agarex.PubSub, "game/over")
 
         socket
-        |> assign(:local, Agarex.Local.new(player_index))
+        |> assign(:local, LocalState.new(player_index))
       else
         socket
         |> assign(:local, nil)
@@ -38,7 +39,7 @@ defmodule AgarexWeb.GameLive do
   defp do_handle_event(raw_event, params, socket) do
     event = normalize_event(raw_event)
     {new_local_state, effects} =
-      Agarex.Local.handle_event(event, params, socket.assigns.local)
+      LocalState.handle_event(event, params, socket.assigns.local)
       |> Effect.normalize
 
     socket =

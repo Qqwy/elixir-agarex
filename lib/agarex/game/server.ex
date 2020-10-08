@@ -1,5 +1,5 @@
 defmodule Agarex.Game.Server do
-  alias Agarex.Game.State
+  alias Agarex.Game.Server.State
   use GenServer
 
   @fps 30
@@ -20,7 +20,7 @@ defmodule Agarex.Game.Server do
 
   defp initial_state(last_game_scores \\ []) do
     start_time = System.monotonic_time()
-    %{start_time: start_time, time: start_time, game_state: State.new(), last_game_scores: last_game_scores}
+    %{start_time: start_time, time: start_time, game_state: State.World.new(), last_game_scores: last_game_scores}
   end
 
   def add_player(name) do
@@ -29,7 +29,7 @@ defmodule Agarex.Game.Server do
 
   @impl true
   def handle_call({:add_player, name}, _from, state) do
-    {game_state, player_index} = State.add_player(state.game_state, name)
+    {game_state, player_index} = State.World.add_player(state.game_state, name)
     state = put_in(state.game_state, game_state)
     {:reply, player_index, state}
   end
@@ -42,7 +42,7 @@ defmodule Agarex.Game.Server do
   end
 
   def handle_info({"game/player_velocity", %{player_id: player_id, velocity: velocity}}, state) do
-    state = update_in(state, [Access.key(:game_state), Access.key(:players), player_id], &State.Player.alter_velocity(&1, velocity))
+    state = update_in(state, [Access.key(:game_state), Access.key(:players), player_id], &State.World.Player.alter_velocity(&1, velocity))
     {:noreply, state}
   end
 
@@ -53,9 +53,9 @@ defmodule Agarex.Game.Server do
     total_time = new_time - state.start_time
     rest_seconds = @game_round_length - System.convert_time_unit(total_time, :native, :second)
 
-    game_state = State.tick(state.game_state, delta_time)
+    game_state = State.World.tick(state.game_state, delta_time)
 
-    scores = State.highscores(game_state)
+    scores = State.World.highscores(game_state)
 
 
     if rest_seconds < 0 do

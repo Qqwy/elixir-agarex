@@ -1,4 +1,4 @@
-defmodule Agarex.Game.State do
+defmodule Agarex.Game.Server.State.World do
   alias __MODULE__.{Player, Agar}
 
   @agar_count 50

@@ -1,4 +1,4 @@
-defmodule Agarex.Local.Controls do
+defmodule Agarex.Game.LocalState.Controls do
   defstruct up: false, down: false, left: false, right: false
   def new() do
     %__MODULE__{}

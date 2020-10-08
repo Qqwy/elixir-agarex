@@ -1,4 +1,4 @@
-defmodule Agarex.Local do
+defmodule Agarex.Game.LocalState do
   alias __MODULE__.Controls
   alias Agarex.Effect
   require Effect

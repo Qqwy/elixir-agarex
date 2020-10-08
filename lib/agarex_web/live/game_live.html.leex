@@ -19,14 +19,14 @@
     phx-window-keyup="controls/key_up"
   >
     <%= if @local && @local.game_state do %>
-      <% current_player = Local.current_player(@local) %>
+      <% current_player = LocalState.current_player(@local) %>
       <% {cx, cy} = current_player.position %>
       <rect
         x="<%= -cx + 50 %>"
         y="<%= -cy + 50 %>"
         rx="2"
-        width="<%= Agarex.Game.State.board_width() %>"
-        height="<%= Agarex.Game.State.board_height() %>"
+        width="<%= Agarex.Game.Server.State.World.board_width() %>"
+        height="<%= Agarex.Game.Server.State.World.board_height() %>"
         class="game_boundaries"
       />
 

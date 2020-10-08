@@ -1,5 +1,5 @@
-defmodule Agarex.Game.State.Player do
-  alias Agarex.Game.State
+defmodule Agarex.Game.Server.State.World.Player do
+  alias Agarex.Game.Server.State.World
   defstruct [:name, :size, :position, :velocity, :alive?]
 
   @movement_speed 1/30000000
@@ -8,7 +8,7 @@ defmodule Agarex.Game.State.Player do
     %__MODULE__{
       name: name,
       size: 10,
-      position: {State.board_width() * :random.uniform(), State.board_height() * :random.uniform()},
+      position: {World.board_width() * :random.uniform(), World.board_height() * :random.uniform()},
       velocity: {0, 0},
       alive?: true,
     }
@@ -29,10 +29,10 @@ defmodule Agarex.Game.State.Player do
   defp clamp({x2, y2}, size) do
     radius = :math.sqrt(size / :math.pi)
     x2 = max(radius, x2)
-    x2 = min(State.board_width() - radius, x2)
+    x2 = min(World.board_width() - radius, x2)
 
     y2 = max(radius, y2)
-    y2 = min(State.board_height() - radius, y2)
+    y2 = min(World.board_height() - radius, y2)
 
     {x2, y2}
   end
